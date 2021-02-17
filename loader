@@ -1,0 +1,35 @@
+#!/bin/sh
+
+function hj_bashrc_set_rcpath() 
+{
+    if [ -n "$1" ];then
+        hj_rcpath="$1"
+    else
+        hj_rcpath="$(dirname "$0")"
+    fi
+}
+
+function hj_bashrc_loader()
+{
+    local dir i 
+    for dir in ${hj_rcpath}; do
+        for i in "${dir}"/*.*; do
+            if test -x "$i"; then
+                printf "\033[KLoading %s..." "$i"
+                if source "$i"; then
+                    printf " ok.\r\n"
+                else
+                    echo " failed."
+                fi
+            fi
+        done
+    done
+}
+
+#if [[ $- = *i* ]]; then
+#    hj_bashrc_set_rcpath "$@"
+#    hj_bashrc_loader "$@"
+#fi
+
+hj_bashrc_set_rcpath "$@"
+hj_bashrc_loader "$@"
